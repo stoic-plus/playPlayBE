@@ -1,0 +1,25 @@
+{
+  "name": "playplaybe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stoic-plus/playPlayBE.git"
+  },
+  "author": "Ricardo Ledsma, Maddie Jones",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stoic-plus/playPlayBE/issues"
+  },
+  "homepage": "https://github.com/stoic-plus/playPlayBE#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "pg": "^7.9.0"
+  }
+}
