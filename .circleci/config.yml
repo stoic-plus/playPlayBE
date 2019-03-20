@@ -34,4 +34,9 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: npm run test
+      - run:
+          name: PG test setup
+          command: |
+            CREATE DATABASE play_test
+        environment:
+          connection: "postgres://ubuntu@localhost:5432/play_test"
