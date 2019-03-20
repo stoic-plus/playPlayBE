@@ -1,10 +1,9 @@
-const configuration = require('./knexfile')["test"];
-const database = require('knex')(configuration);
 const chai = require("chai");
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../index');
-
+const configuration = require('../knexfile')["test"];
+const database = require('knex')(configuration);
 chai.use(chaiHttp);
 
 describe('API routes', function(){
@@ -21,29 +20,30 @@ describe('API routes', function(){
   });
 
   describe('GET /api/v1/favorites', function(){
-    it('returns favorites for a user', function(){
+    it('returns favorites for a user', function(done){
       chai.request(server)
         .get('/api/v1/favorites')
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
-          response.should.be.a('array');
+          response.body.should.be.a('array');
           response.body.length.should.equal(3);
 
           response.body[0].should.have.property('id');
-          response.body[0].id.should.equal('1');
+          response.body[0].id.should.equal(1);
 
           response.body[0].should.have.property('name');
           response.body[0].name.should.equal('song_1');
 
           response.body[0].should.have.property('artist_name');
-          response.body[0].id.should.equal('artist_1');
+          response.body[0].artist_name.should.equal('artist_1');
 
           response.body[0].should.have.property('genre');
-          response.body[0].id.should.equal('Pop');
+          response.body[0].genre.should.equal('Pop');
 
           response.body[0].should.have.property('rating');
-          response.body[0].id.should.equal('88');
+          response.body[0].rating.should.equal('88');
+          done();
         })
     });
   });
