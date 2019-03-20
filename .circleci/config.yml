@@ -29,8 +29,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run: npm install postgresql-client-9.6
-
+      
       - save_cache:
           paths:
             - node_modules
