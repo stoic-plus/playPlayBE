@@ -15,6 +15,16 @@ app.get('/', (request, response) => {
   response.send('Welcome To Play Play');
 });
 
+app.get('/api/v1/favorites', (request, response) => {
+  database('songs').select()
+    .then((songs) => {
+      response.status(200).json(songs);
+    })
+    .catch(error => {
+      response.status(400).json({error});
+    })
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
