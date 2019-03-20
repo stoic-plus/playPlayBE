@@ -8,11 +8,13 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
-
+        environment:
+          TEST_DATABASE_URL: postgresql://root@localhost/circle_test
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
+      - image: circleci/postgres:9.6.5-alpine-ram
 
     working_directory: ~/repo
 
@@ -27,6 +29,11 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
+      - run: npm install postgresql-client-9.6
+       - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "CREATE DATABASE test play_test;"
 
       - save_cache:
           paths:
@@ -34,10 +41,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run:
-          name: PG test setup
-          environment:
-            connection: "postgres://ubuntu@localhost:5432/play_test"
-          command: |
-            psql
-            CREATE DATABASE play_test;
+      - run: npm run test
