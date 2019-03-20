@@ -38,3 +38,6 @@ jobs:
           name: PG test setup
           environment:
             connection: "postgres://ubuntu@localhost:5432/play_test"
+          command: |
+            psql
+            CREATE DATABASE play_test;
