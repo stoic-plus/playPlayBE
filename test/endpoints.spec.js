@@ -86,6 +86,8 @@ describe('API routes', function(){
         .send({ name: "new_song", artist_name: "new_artist" })
         .end((err, response) => {
           response.should.have.status(400);
+          response.body.should.have.property('message');
+          response.body.message.should.equal('favorite not found');
           done();
       });
     });
