@@ -4,6 +4,8 @@ const chaiHttp = require('chai-http');
 const server = require('../index');
 const configuration = require('../knexfile')["test"];
 const database = require('knex')(configuration);
+pry = require('pryjs');
+
 chai.use(chaiHttp);
 
 describe('API routes', function(){
@@ -45,6 +47,55 @@ describe('API routes', function(){
           response.body[0].rating.should.equal('88');
           done();
         })
+    });
+  });
+
+  describe('PUT /api/v1/favorites/:id ', function(){
+    it('returns the updated favorite if found', function(done){
+      chai.request(server)
+        .put('/api/v1/favorites/1')
+        .send({ name: "new_song", artist_name: "new_artist" })
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.have.property('favorites');
+
+          response.body.favorites.should.have.property('id');
+          response.body.favorites.id.should.equal(1);
+
+          response.body.favorites.should.have.property('name');
+          response.body.favorites.name.should.equal('song_1');
+
+          response.body.favorites.should.have.property('artist_name');
+          response.body.favorites.name.should.equal('artist_1');
+
+          response.body.favorites.should.have.property('genre');
+          response.body.favorites.name.should.equal('Pop');
+
+          response.body.favorites.should.have.property('rating');
+          response.body.favorites.name.should.equal(88);
+          done();
+        })
+
+      //         {
+      //   "favorites": {
+      //     "id": 1,
+      //     "name": "We Are the Champions",
+      //     "artist_name": "Queen"
+      //     "genre": "Rock",
+      //     "rating": 77
+      //   }
+      // }
+    });
+
+    it('returns 400 error if favorite not found', function(){
+      chai.request(server)
+        .put('/api/v1/favorites/20')
+        .send({ name: "new_song", artist_name: "new_artist" })
+        .end((err, response) => {
+          response.should.have.status(200);
+          done();
+      });
     });
   });
 });
