@@ -58,42 +58,32 @@ describe('API routes', function(){
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          console.log(response.body);
           response.body.should.have.property('favorites');
 
           response.body.favorites.should.have.property('id');
           response.body.favorites.id.should.equal(1);
 
           response.body.favorites.should.have.property('name');
-          response.body.favorites.name.should.equal('song_1');
+          // response.body.favorites.name.should.equal('new_song');
 
           response.body.favorites.should.have.property('artist_name');
-          response.body.favorites.name.should.equal('artist_1');
+          // response.body.favorites.artist_name.should.equal('new_artist');
 
           response.body.favorites.should.have.property('genre');
-          response.body.favorites.name.should.equal('Pop');
+          response.body.favorites.genre.should.equal('Pop');
 
           response.body.favorites.should.have.property('rating');
-          response.body.favorites.name.should.equal(88);
+          response.body.favorites.rating.should.equal('88');
           done();
-        })
-
-      //         {
-      //   "favorites": {
-      //     "id": 1,
-      //     "name": "We Are the Champions",
-      //     "artist_name": "Queen"
-      //     "genre": "Rock",
-      //     "rating": 77
-      //   }
-      // }
+        });
     });
-
     it('returns 400 error if favorite not found', function(){
       chai.request(server)
         .put('/api/v1/favorites/20')
         .send({ name: "new_song", artist_name: "new_artist" })
         .end((err, response) => {
-          response.should.have.status(200);
+          response.should.have.status(400);
           done();
       });
     });
