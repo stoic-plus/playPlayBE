@@ -47,4 +47,40 @@ describe('API routes', function(){
         })
     });
   });
+  describe('POST /api/v1/favorites', function(){
+    it ('returns favrited song', function(done){
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send(
+           {"favorites": {
+           "id": 5,
+           "name": "Bohemian Rapsody",
+           "artist_name": "Queen",
+           "genre": "Rock",
+           "rating": 100
+            }
+          })
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+        body.lenght.should.equal(1);
+
+        response.body.should.have.property('id');
+        response.body.id.should.equal(1);
+
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Bohemian Rapsody');
+
+        response.body.should.have.property('artist_name');
+        response.body.artist_name.should.equal('Queen');
+
+        response.body.should.have.property('genre');
+        response.body.genre.should.equal('Rock');
+
+        response.body.should.have.property('rating');
+        response.body.rating.should.equal('100');
+        done();
+      })
+    });
+  });
 });
