@@ -27,7 +27,6 @@ describe('API routes', function(){
           response.should.have.status(200);
           response.should.be.json;
           response.body.should.be.a('array');
-          response.body.length.should.equal(3);
 
           response.body[0].should.have.property('id');
           response.body[0].id.should.equal(1);
@@ -48,22 +47,20 @@ describe('API routes', function(){
     });
   });
   describe('POST /api/v1/favorites', function(){
-    it ('returns favrited song', function(done){
+    it ('returns favorited song', function(done){
       chai.request(server)
       .post('/api/v1/favorites')
       .send(
-           {"favorites": {
-           "id": 5,
+           {
            "name": "Bohemian Rapsody",
            "artist_name": "Queen",
            "genre": "Rock",
            "rating": 100
-            }
-          })
+            })
       .end((err, response) => {
-        response.should.have.status(200);
+        response.should.have.status(201);
         response.should.be.json;
-        body.lenght.should.equal(1);
+        response.body.length.should.equal(1);
 
         response.body.should.have.property('id');
         response.body.id.should.equal(1);
