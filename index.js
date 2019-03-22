@@ -27,9 +27,7 @@ app.get('/api/v1/favorites', (request, response) => {
 
 app.post('/api/v1/favorites', (request, response) => {
   const song = request.body;
-  // eval(pry.it);
   for (let requiredParameter of ['name', 'artist_name', 'rating', 'genre']) {
-    eval(pry.it);
     if (!song[requiredParameter]) {
       return response
         .status(422)
@@ -37,9 +35,9 @@ app.post('/api/v1/favorites', (request, response) => {
     }
   }
 
-  database('songs').insert(song, 'id')
+  database('songs').insert(song, ['id', 'name', 'artist_name', 'genre', 'rating'])
     .then(song => {
-      response.status(201).json({ id: song[0] })
+      response.status(201).json({favorites: song[0]})
     })
     .catch(error => {
       response.status(500).json({ error });

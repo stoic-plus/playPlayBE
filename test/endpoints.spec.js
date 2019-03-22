@@ -2,6 +2,7 @@ const chai = require("chai");
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../index');
+const pry = require("pryjs");
 const configuration = require('../knexfile')["test"];
 const database = require('knex')(configuration);
 chai.use(chaiHttp);
@@ -58,6 +59,7 @@ describe('API routes', function(){
            "rating": 100
             })
       .end((err, response) => {
+        eval(pry.it);
         response.should.have.status(201);
         response.should.be.json;
         response.body.length.should.equal(1);
