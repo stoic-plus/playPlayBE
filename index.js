@@ -30,7 +30,7 @@ app.get('/', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
-  database('songs').select()
+  database('songs').select().orderBy('id')
     .then((songs) => {
       response.status(200).json(songs);
     })
