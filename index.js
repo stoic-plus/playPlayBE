@@ -6,8 +6,16 @@ const pry = require("pryjs");
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+
+const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
-  origin: 'https://maddyg91.github.io',
+  origin: function(origin, callback) {
+    if (whitelist.indexOf(origin) === -1) {
+      callback(new Error('Not allowed bt CORS'));
+    } else {
+      callback(null, true);
+    }
+  },
   optionsSuccessStatus: 200
 }
 
