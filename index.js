@@ -10,8 +10,10 @@ const database = require('knex')(configuration);
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
   origin: function(origin, callback) {
-    if (whitelist.indexOf(origin) === -1) {
-      callback(new Error('Not allowed bt CORS'));
+    if (!origin) {
+      callback(null, true);
+    } else if (whitelist.indexOf(origin) === -1) {
+      callback(new Error('Not allowed by CORS'));
     } else {
       callback(null, true);
     }
