@@ -39,6 +39,23 @@ app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
     })
 });
 
+app.post('/api/v1/favorites', (request, response) => {
+  const song = request.body;
+  for (let requiredParameter of ['name', 'artist_name', 'rating', 'genre']) {
+    if (!song[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String>, artist_name: <String>, genre: <Sting>, rating: <Integer>}. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('songs').insert(song, ['id', 'name', 'artist_name', 'genre', 'rating'])
+    .then(song => {
+      response.status(201).json({favorites: song[0]})
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+
 app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   database('songs').where('id', request.params.id)
     .update(request.body, ['id', 'name', 'artist_name', 'genre', 'rating'])
