@@ -10,8 +10,10 @@ const database = require('knex')(configuration);
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
   origin: function(origin, callback) {
-    if (whitelist.indexOf(origin) === -1) {
-      callback(new Error('Not allowed bt CORS'));
+     if(origin === undefined){
+      callback(null, true);
+    } else if (whitelist.indexOf(origin) === -1) {
+      callback(new Error('Not allowed by CORS'));
     } else {
       callback(null, true);
     }
@@ -54,17 +56,17 @@ app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
     });
 });
 
-app.get('api/v1/favorites/:id', cors(corsOptions), (request, response) => {
+app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   database('songs').where('id', request.params.id)
-  .then(song => {
-    if(songs.length === 0) {
-        response.status(400).json({message: "favorite not found"});
+  .then((favoritesong) => {
+    if(favoritesong.length === 0) {
+        response.status(400).json({message: "favorite with id not found"});
     } else {
         response.status(200).json({favorites: songs[0]});
     }
   })
   .catch(error => {
-    response.status(400).json({error});
+    response.status(400).json({message: 'favorite not found'});
   });
 })
 

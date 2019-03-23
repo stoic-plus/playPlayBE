@@ -2,9 +2,9 @@ const chai = require("chai");
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../index');
+const pry = require("pryjs");
 const configuration = require('../knexfile')["test"];
 const database = require('knex')(configuration);
-// pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -97,14 +97,14 @@ describe('API routes', function(){
   describe('GET /api/v1/favorites/:id ', function(){
     it('it returns favorite by id', function(done){
       chai.request(server)
-        .get('/api/v1/favorites/1')
+        .get('/api/v1/favorites/4')
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
           response.body.should.have.property('favorites');
 
           response.body.favorites.should.have.property('id');
-          response.body.favorites.id.should.equal(1);
+          response.body.favorites.id.should.equal(4);
 
           response.body.favorites.should.have.property('name');
           response.body.favorites.name.should.equal('funk');
@@ -123,7 +123,7 @@ describe('API routes', function(){
 
     it('returns 400 error if favorite with id not found', function(done){
       chai.request(server)
-        .get('/api/v1/favorites/1')
+        .get('/api/v1/favorites/4')
         .end((err, response) => {
           response.should.have.status(400);
           response.body.should.have.property('message');
