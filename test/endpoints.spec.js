@@ -61,6 +61,7 @@ describe('API routes', function(){
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
+
           response.body.should.have.property('favorites');
 
           response.body.favorites.should.have.property('id');
@@ -140,5 +141,40 @@ describe('API routes', function(){
       });
     })
     .catch(error => { throw error });
+    
+  
+  describe('POST /api/v1/favorites', function(){
+    it ('returns favorited song', function(done){
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send(
+           {
+           "name": "Bohemian Rapsody",
+           "artist_name": "Queen",
+           "genre": "Rock",
+           "rating": 100
+            })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.should.be.json;
+        
+        response.body.should.have.property('favorites');
+
+        response.body.favorites.should.have.property('id');
+
+        response.body.favorites.should.have.property('name');
+        response.body.favorites.name.should.equal('Bohemian Rapsody');
+
+        response.body.favorites.should.have.property('artist_name');
+        response.body.favorites.artist_name.should.equal('Queen');
+
+        response.body.favorites.should.have.property('genre');
+        response.body.favorites.genre.should.equal('Rock');
+
+        response.body.favorites.should.have.property('rating');
+        response.body.favorites.rating.should.equal('100');
+        done();
+      })
+    });
   });
 });
