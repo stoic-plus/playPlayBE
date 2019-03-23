@@ -62,7 +62,7 @@ app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
     if(favoritesong.length === 0) {
         response.status(400).json({message: "favorite with id not found"});
     } else {
-        response.status(200).json({favorites: songs[0]});
+        response.status(200).json({favorites: favoritesong[0]});
     }
   })
   .catch(error => {
