@@ -59,25 +59,22 @@ describe('API routes', function(){
            "rating": 100
             })
       .end((err, response) => {
-        eval(pry.it);
         response.should.have.status(201);
         response.should.be.json;
-        response.body.length.should.equal(1);
+  // eval(pry.it);
+        response.body["favorites"].should.have.property('id');
 
-        response.body.should.have.property('id');
-        response.body.id.should.equal(1);
+        response.body["favorites"].should.have.property('name');
+        response.body["favorites"].name.should.equal('Bohemian Rapsody');
 
-        response.body.should.have.property('name');
-        response.body.name.should.equal('Bohemian Rapsody');
+        response.body["favorites"].should.have.property('artist_name');
+        response.body["favorites"].artist_name.should.equal('Queen');
 
-        response.body.should.have.property('artist_name');
-        response.body.artist_name.should.equal('Queen');
+        response.body["favorites"].should.have.property('genre');
+        response.body["favorites"].genre.should.equal('Rock');
 
-        response.body.should.have.property('genre');
-        response.body.genre.should.equal('Rock');
-
-        response.body.should.have.property('rating');
-        response.body.rating.should.equal('100');
+        response.body["favorites"].should.have.property('rating');
+        response.body["favorites"].rating.should.equal('100');
         done();
       })
     });
