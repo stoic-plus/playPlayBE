@@ -19,6 +19,7 @@
   "homepage": "https://github.com/stoic-plus/playPlayBE#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.16.3",
     "pg": "^7.9.0",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
-    "mocha": "^6.0.2"
+    "mocha": "^6.0.2",
+    "pryjs": "^1.0.3"
   }
 }

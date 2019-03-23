@@ -1,7 +1,7 @@
 exports.seed = function(knex, Promise) {
   return knex.raw("TRUNCATE playlist_songs restart identity;")
     .then(() => knex.raw("TRUNCATE playlists restart identity CASCADE;"))
-    .then(() => knex.raw("TRUNCATE playlists restart identity CASCADE;"))
+    .then(() => knex.raw("TRUNCATE songs restart identity CASCADE;"))
     .then(() => {
       return Promise.all([
         knex('songs').insert([
