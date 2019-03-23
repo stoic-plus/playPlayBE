@@ -54,6 +54,20 @@ app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
     });
 });
 
+app.get('api/v1/favorites/:id', cors(corsOptions), (request, response) => {
+  database('songs').where('id', request.params.id)
+  .then(song => {
+    if(songs.length === 0) {
+        response.status(400).json({message: "favorite not found"});
+    } else {
+        response.status(200).json({favorites: songs[0]});
+    }
+  })
+  .catch(error => {
+    response.status(400).json({error});
+  });
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
