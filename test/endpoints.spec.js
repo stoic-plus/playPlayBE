@@ -15,11 +15,11 @@ describe('API routes', function(){
     .catch((error) => {throw error;});
   });
 
-  beforeEach((done) => {
-    database.seed.run()
-    .then(() => done())
-    .catch(error => {throw error;});
-  });
+  // beforeEach((done) => {
+  //   database.seed.run()
+  //   .then(() => done())
+  //   .catch(error => {throw error;});
+  // });
 
   describe('GET /api/v1/favorites', function(){
     database.seed.run()
@@ -54,7 +54,7 @@ describe('API routes', function(){
  });
 
   describe('PUT /api/v1/favorites/:id ', function(){
-    it('returns the updated favorite if found', function(done){
+    xit('returns the updated favorite if found', function(done){
       chai.request(server)
         .put('/api/v1/favorites/1')
         .send({ name: "new_song", artist_name: "new_artist" })
@@ -82,16 +82,19 @@ describe('API routes', function(){
         });
     });
 
-    it('returns 400 error if favorite not found', function(done){
-      chai.request(server)
-        .put('/api/v1/favorites/20')
-        .send({ name: "new_song", artist_name: "new_artist" })
-        .end((err, response) => {
-          response.should.have.status(400);
-          response.body.should.have.property('message');
-          response.body.message.should.equal('favorite not found');
-          done();
-      });
+    database.seed.run()
+      .then(() => {
+        it('returns 400 error if favorite not found', function(done){
+          chai.request(server)
+            .put('/api/v1/favorites/20')
+            .send({ name: "new_song", artist_name: "new_artist" })
+            .end((err, response) => {
+              response.should.have.status(400);
+              response.body.should.have.property('message');
+              response.body.message.should.equal('favorite not found');
+              done();
+          });
+        });
     });
   });
 
@@ -186,6 +189,7 @@ describe('API routes', function(){
       response.should.be.json;
 
       response.body.should.be.a('array');
+      done();
     })
   })
 });

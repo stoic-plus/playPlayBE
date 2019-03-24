@@ -101,10 +101,10 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
   ])
   .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
   .then((playlists) => {
-    eval(pry.it);
+    // eval(pry.it);
   })
   .then((playlists) => {
-      eval(pry.it);
+      // eval(pry.it);
     response.status(200).json({playlists});
   })
   .catch(error => {
