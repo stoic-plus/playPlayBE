@@ -95,20 +95,21 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
   .join('playlist_songs', {'playlists.id': 'playlist_songs.playlist_id'})
   .join('songs',{'songs.id': 'playlist_songs.song_id'})
   .select([
-    'playlists.id as playId',
-    'playlists.name as playName',
-    database.raw('ARRAY_AGG(songs.name) as songs')
+    'playlists.id as id',
+    'playlists.name as name',
+    database.raw("JSON_AGG(songs) as favorites")
   ])
   .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
   .then((playlists) => {
-    // eval(pry.it);
-  })
-  .then((playlists) => {
-      // eval(pry.it);
+    playlists.forEach(list => {
+     list.favorites.forEach(fav => {
+       delete fav.created_at;
+       delete fav.updated_at;
+     });
+   });
     response.status(200).json({playlists});
   })
   .catch(error => {
-      eval(pry.it);
     response.status(400).json({ error });
   });
 });
