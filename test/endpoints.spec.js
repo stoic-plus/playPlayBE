@@ -212,19 +212,21 @@ describe('API routes', function(){
             database('songs').count()
              .then(data => {
                expect(data[0].count).to.equal('2');
-             });
+               done();
+             })
+             .catch(err => { throw err; });
           });
-          done();
-        });
+        })
+        .catch(err => { throw err; });
     });
 
-    it('returns 400 error if favorite not found', function(done){
+    xit('returns 400 error if favorite not found', function(done){
       chai.request(server)
       .delete('/api/v1/favorites/4')
       .end((err, response) => {
-        // response.should.have.status(400);
+        response.should.have.status(400);
+        done();
       });
-      done();
     });
   });
 });
