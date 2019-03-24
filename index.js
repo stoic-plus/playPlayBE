@@ -10,7 +10,7 @@ const database = require('knex')(configuration);
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
   origin: function(origin, callback) {
-    if (!origin) {
+     if(origin === undefined){
       callback(null, true);
     } else if (whitelist.indexOf(origin) === -1) {
       callback(new Error('Not allowed by CORS'));
@@ -41,6 +41,23 @@ app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
     })
 });
 
+app.post('/api/v1/favorites', (request, response) => {
+  const song = request.body;
+  for (let requiredParameter of ['name', 'artist_name', 'rating', 'genre']) {
+    if (!song[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String>, artist_name: <String>, genre: <Sting>, rating: <Integer>}. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('songs').insert(song, ['id', 'name', 'artist_name', 'genre', 'rating'])
+    .then(song => {
+      response.status(201).json({favorites: song[0]})
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+
 app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   database('songs').where('id', request.params.id)
     .update(request.body, ['id', 'name', 'artist_name', 'genre', 'rating'])
@@ -55,6 +72,20 @@ app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
       response.status(400).json({error});
     });
 });
+
+app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
+  database('songs').where('id', request.params.id)
+  .then((favoritesong) => {
+    if(favoritesong.length === 0) {
+        response.status(400).json({message: "favorite with id not found"});
+    } else {
+        response.status(200).json({favorites: favoritesong[0]});
+    }
+  })
+  .catch(error => {
+    response.status(400).json({message: 'favorite not found'});
+  });
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
