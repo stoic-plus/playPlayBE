@@ -185,7 +185,10 @@ describe('API routes', function(){
       response.should.have.status(200);
       response.should.be.json;
 
-      response.body.should.be.a('array');
+      response.body["playlists"][0].should.have.property("name");
+      response.body["playlists"][0].should.have.property("id");
+      response.body["playlists"][0].should.have.property("favorites");
+      done();
     })
   })
 });
