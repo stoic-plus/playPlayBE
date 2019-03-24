@@ -91,13 +91,24 @@ app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
-  database('playlists').innerJoin('playlist_songs', 'playlists.id','playlist_songs.playlist_id')
-  .select("playlists.id","playlists.name", 'playlist_songs.playlist_id');
-  database('songs').where('songs.playlist_id', "=", 'playlists.id')
-  .then((playlist) => {
-      response.status(200).json({playlists});
+  database('playlists')
+  .join('playlist_songs', {'playlists.id': 'playlist_songs.playlist_id'})
+  .join('songs',{'songs.id': 'playlist_songs.song_id'})
+  .select([
+    'playlists.id as playId',
+    'playlists.name as playName',
+    database.raw('ARRAY_AGG(songs.name) as songs')
+  ])
+  .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
+  .then((playlists) => {
+    eval(pry.it);
+  })
+  .then((playlists) => {
+      eval(pry.it);
+    response.status(200).json({playlists});
   })
   .catch(error => {
+      eval(pry.it);
     response.status(400).json({ error });
   });
 });

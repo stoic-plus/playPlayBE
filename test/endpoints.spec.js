@@ -178,4 +178,14 @@ describe('API routes', function(){
       })
     });
   });
+  it ('hit the enpoint', function(done) {
+    chai.request(server)
+    .get('/api/v1/playlists')
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.json;
+
+      response.body.should.be.a('array');
+    })
+  })
 });
