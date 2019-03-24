@@ -15,83 +15,89 @@ describe('API routes', function(){
     .catch((error) => {throw error;});
   });
 
-  beforeEach((done) => {
-    database.seed.run()
-    .then(() => done())
-    .catch(error => {throw error;});
-  });
+  // beforeEach((done) => {
+  //   database.seed.run()
+  //   .then(() => done())
+  //   .catch(error => {throw error;});
+  // });
 
   describe('GET /api/v1/favorites', function(){
     database.seed.run()
     .then(() => {
       it('returns favorites for a user', function(done){
         chai.request(server)
-          .get('/api/v1/favorites')
-          .end((err, response) => {
-            response.should.have.status(200);
-            response.should.be.json;
-            response.body.should.be.a('array');
-            response.body.length.should.equal(3);
-            response.body[0].should.have.property('id');
-            response.body[0].id.should.equal(1);
-
-            response.body[0].should.have.property('name');
-            response.body[0].name.should.equal('song_1');
-
-            response.body[0].should.have.property('artist_name');
-            response.body[0].artist_name.should.equal('artist_1');
-
-            response.body[0].should.have.property('genre');
-            response.body[0].genre.should.equal('Pop');
-
-            response.body[0].should.have.property('rating');
-            response.body[0].rating.should.equal('88');
-            done();
-          })
-      });
-    })
-    .catch(error => {throw error;})
-  });
-
-  describe('PUT /api/v1/favorites/:id ', function(){
-    it('returns the updated favorite if found', function(done){
-      chai.request(server)
-        .put('/api/v1/favorites/1')
-        .send({ name: "new_song", artist_name: "new_artist" })
+        .get('/api/v1/favorites')
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(3);
+          response.body[0].should.have.property('id');
+          response.body[0].id.should.equal(1);
 
-          response.body.should.have.property('favorites');
+          response.body[0].should.have.property('name');
+          response.body[0].name.should.equal('song_1');
 
-          response.body.favorites.should.have.property('id');
-          response.body.favorites.id.should.equal(1);
+          response.body[0].should.have.property('artist_name');
+          response.body[0].artist_name.should.equal('artist_1');
 
-          response.body.favorites.should.have.property('name');
-          response.body.favorites.name.should.equal('new_song');
+          response.body[0].should.have.property('genre');
+          response.body[0].genre.should.equal('Pop');
 
-          response.body.favorites.should.have.property('artist_name');
-          response.body.favorites.artist_name.should.equal('new_artist');
-
-          response.body.favorites.should.have.property('genre');
-          response.body.favorites.genre.should.equal('Pop');
-
-          response.body.favorites.should.have.property('rating');
-          response.body.favorites.rating.should.equal('88');
+          response.body[0].should.have.property('rating');
+          response.body[0].rating.should.equal('88');
           done();
-        });
+        })
+      });
+    })
+    .catch(error => {throw error;})
+ });
+
+  describe('PUT /api/v1/favorites/:id ', function(){
+    database.seed.run()
+    .then(() => {
+      it('returns the updated favorite if found', function(done){
+        chai.request(server)
+          .put('/api/v1/favorites/1')
+          .send({ name: "new_song", artist_name: "new_artist" })
+          .end((err, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+
+            response.body.should.have.property('favorites');
+
+            response.body.favorites.should.have.property('id');
+            response.body.favorites.id.should.equal(1);
+
+            response.body.favorites.should.have.property('name');
+            response.body.favorites.name.should.equal('new_song');
+
+            response.body.favorites.should.have.property('artist_name');
+            response.body.favorites.artist_name.should.equal('new_artist');
+
+            response.body.favorites.should.have.property('genre');
+            response.body.favorites.genre.should.equal('Pop');
+
+            response.body.favorites.should.have.property('rating');
+            response.body.favorites.rating.should.equal('88');
+            done();
+          });
+      });
     });
 
-    it('returns 400 error if favorite not found', function(done){
-      chai.request(server)
-        .put('/api/v1/favorites/20')
-        .send({ name: "new_song", artist_name: "new_artist" })
-        .end((err, response) => {
-          response.should.have.status(400);
-          response.body.should.have.property('message');
-          response.body.message.should.equal('favorite not found');
-          done();
-      });
+    database.seed.run()
+      .then(() => {
+        it('returns 400 error if favorite not found', function(done){
+          chai.request(server)
+            .put('/api/v1/favorites/20')
+            .send({ name: "new_song", artist_name: "new_artist" })
+            .end((err, response) => {
+              response.should.have.status(400);
+              response.body.should.have.property('message');
+              response.body.message.should.equal('favorite not found');
+              done();
+          });
+        });
     });
   });
 
@@ -122,9 +128,10 @@ describe('API routes', function(){
             response.body.favorites.rating.should.equal('100');
             done();
           });
-      });
+        });
+      })
+      .catch(error => { throw error; });
     })
-    .catch(error => { throw error; });
 
     database.seed.run()
     .then(() => {
@@ -141,8 +148,8 @@ describe('API routes', function(){
       });
     })
     .catch(error => { throw error });
-    
-  
+
+
   describe('POST /api/v1/favorites', function(){
     it ('returns favorited song', function(done){
       chai.request(server)
@@ -157,7 +164,7 @@ describe('API routes', function(){
       .end((err, response) => {
         response.should.have.status(201);
         response.should.be.json;
-        
+
         response.body.should.have.property('favorites');
 
         response.body.favorites.should.have.property('id');
@@ -177,4 +184,19 @@ describe('API routes', function(){
       })
     });
   });
+  describe('GET /api/v1/playlists',function(){
+    it ('returns all playlists with favorites', function(done) {
+      chai.request(server)
+      .get('/api/v1/playlists')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+
+        response.body["playlists"][0].should.have.property("name");
+        response.body["playlists"][0].should.have.property("id");
+        response.body["playlists"][0].should.have.property("favorites");
+        done();
+      })
+    })
+  })
 });

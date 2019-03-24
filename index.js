@@ -57,6 +57,9 @@ app.post('/api/v1/favorites', (request, response) => {
     })
     .catch(error => {
       response.status(500).json({ error });
+    });
+  });
+
 
 app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   database('songs').where('id', request.params.id)
@@ -85,7 +88,31 @@ app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   .catch(error => {
     response.status(400).json({message: 'favorite not found'});
   });
-})
+});
+
+app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
+  database('playlists')
+  .join('playlist_songs', {'playlists.id': 'playlist_songs.playlist_id'})
+  .join('songs',{'songs.id': 'playlist_songs.song_id'})
+  .select([
+    'playlists.id as id',
+    'playlists.name as name',
+    database.raw("JSON_AGG(songs) as favorites")
+  ])
+  .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
+  .then((playlists) => {
+    playlists.forEach(list => {
+     list.favorites.forEach(fav => {
+       delete fav.created_at;
+       delete fav.updated_at;
+     });
+   });
+    response.status(200).json({playlists});
+  })
+  .catch(error => {
+    response.status(400).json({ error });
+  });
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
