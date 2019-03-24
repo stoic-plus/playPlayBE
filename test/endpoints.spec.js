@@ -122,9 +122,10 @@ describe('API routes', function(){
             response.body.favorites.rating.should.equal('100');
             done();
           });
-      });
+        });
+      })
+      .catch(error => { throw error; });
     })
-    .catch(error => { throw error; });
 
     database.seed.run()
     .then(() => {
