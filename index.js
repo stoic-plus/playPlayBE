@@ -57,6 +57,9 @@ app.post('/api/v1/favorites', (request, response) => {
     })
     .catch(error => {
       response.status(500).json({ error });
+    });
+  });
+
 
 app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   database('songs').where('id', request.params.id)
@@ -85,7 +88,7 @@ app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
   .catch(error => {
     response.status(400).json({message: 'favorite not found'});
   });
-})
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
