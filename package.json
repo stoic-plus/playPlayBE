@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node index.js",
-    "test": "NODE_ENV=test mocha --exit"
+    "test": "NODE_ENV=test mocha --exit",
+    "p_test": "NODE_ENV=test mocha --exit --timeout 5000000"
   },
   "repository": {
     "type": "git",

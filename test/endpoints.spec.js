@@ -195,9 +195,35 @@ describe('API routes', function(){
   });
 
   describe('DELETE /api/v1/favorites/:id', function(){
+    beforeEach((done) => {
+      database.seed.run()
+      .then(() => done())
+      .catch(error => {throw error;});
+    });
+
     it('removes favorite by id', function(done){
-      const count = database('songs').count('id').then(count => count);
-      // expect(2).to.equal(2);
+      database('songs').count()
+        .then(data => {
+          expect(data[0].count).to.equal('3');
+          chai.request(server)
+          .delete('/api/v1/favorites/1')
+          .end((err, response) => {
+            response.should.have.status(202);
+            database('songs').count()
+             .then(data => {
+               expect(data[0].count).to.equal('2');
+             });
+          });
+          done();
+        });
+    });
+
+    it('returns 400 error if favorite not found', function(done){
+      chai.request(server)
+      .delete('/api/v1/favorites/4')
+      .end((err, response) => {
+        // response.should.have.status(400);
+      });
       done();
     });
   });
