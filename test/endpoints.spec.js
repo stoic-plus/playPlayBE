@@ -178,17 +178,19 @@ describe('API routes', function(){
       })
     });
   });
-  it ('hit the enpoint', function(done) {
-    chai.request(server)
-    .get('/api/v1/playlists')
-    .end((err, response) => {
-      response.should.have.status(200);
-      response.should.be.json;
-  
-      response.body["playlists"][0].should.have.property("name");
-      response.body["playlists"][0].should.have.property("id");
-      response.body["playlists"][0].should.have.property("favorites");
-      done();
+  describe('GET /api/v1/playlists',function(){
+    it ('returns all playlists with favorites', function(done) {
+      chai.request(server)
+      .get('/api/v1/playlists')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+
+        response.body["playlists"][0].should.have.property("name");
+        response.body["playlists"][0].should.have.property("id");
+        response.body["playlists"][0].should.have.property("favorites");
+        done();
+      })
     })
   })
 });
