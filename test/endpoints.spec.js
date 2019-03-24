@@ -184,7 +184,7 @@ describe('API routes', function(){
     .end((err, response) => {
       response.should.have.status(200);
       response.should.be.json;
-
+  
       response.body["playlists"][0].should.have.property("name");
       response.body["playlists"][0].should.have.property("id");
       response.body["playlists"][0].should.have.property("favorites");

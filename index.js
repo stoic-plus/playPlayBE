@@ -101,6 +101,12 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
   ])
   .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
   .then((playlists) => {
+    playlists.forEach(list => {
+     list.favorites.forEach(fav => {
+       delete fav.created_at;
+       delete fav.updated_at;
+     });
+   });
     response.status(200).json({playlists});
   })
   .catch(error => {
