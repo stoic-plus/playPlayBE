@@ -202,31 +202,21 @@ describe('API routes', function(){
     });
 
     it('removes favorite by id', function(done){
-      database('songs').count()
-        .then(data => {
-          expect(data[0].count).to.equal('3');
-          chai.request(server)
-          .delete('/api/v1/favorites/1')
-          .end((err, response) => {
-            response.should.have.status(202);
-            database('songs').count()
-             .then(data => {
-               expect(data[0].count).to.equal('2');
-               done();
-             })
-             .catch(err => { throw err; });
-          });
+      chai.request(server)
+        .delete('/api/v1/favorites/1')
+        .end((err, response) => {
+          response.should.have.status(202);
+          done();
         })
-        .catch(err => { throw err; });
     });
 
-    xit('returns 400 error if favorite not found', function(done){
+    it('returns 400 if favorite not found', function(done){
       chai.request(server)
-      .delete('/api/v1/favorites/4')
-      .end((err, response) => {
-        response.should.have.status(400);
-        done();
-      });
+        .delete('/api/v1/favorites/4')
+        .end((err, response) => {
+          response.should.have.status(400);
+          done();
+        })
     });
   });
 });
