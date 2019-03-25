@@ -23,7 +23,7 @@ exports.up = function(knex, Promise) {
       table.integer('playlist_id').unsigned();
       table.foreign('playlist_id').references('playlists.id');
       table.integer('song_id').unsigned();
-      table.foreign('song_id').references('songs.id').onDelete('CASCADE');
+      table.foreign('song_id').references('songs.id');
 
       table.timestamps(true, true);
     })
