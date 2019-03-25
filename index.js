@@ -115,18 +115,15 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
 });
 
 app.delete('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  database('playlist_songs').where('song_id', request.params.id)
-    .del()
-    .then(() => {
-      database('songs').where('id', request.params.id)
-        .del()
-        .then(() => {
-          response.status(202);
-        })
-        .catch(error => {
-          response.status(400).json({ message: "favorite not found" });
-        });
-  });
+  database('playlist_songs').select('playlist_id', 'song_id').where('song_id', request.params.id)
+    .then((playsong) => {
+      if (playsong.length === 0) {
+      } else {
+        response.json(playsong);
+      }
+    })
+    .catch(error => {
+    })
 });
 
 app.listen(app.get('port'), () => {
