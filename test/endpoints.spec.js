@@ -30,7 +30,7 @@ describe('API routes', function(){
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(3);
+        response.body.length.should.equal(4);
         response.body[0].should.have.property('id');
         response.body[0].id.should.equal(1);
 
@@ -87,7 +87,7 @@ describe('API routes', function(){
 
     it('returns 400 error if favorite not found', function(done){
       chai.request(server)
-        .put('/api/v1/favorites/4')
+        .put('/api/v1/favorites/5')
         .send({ name: "new_song", artist_name: "new_artist" })
         .end((err, response) => {
           response.should.have.status(400);
@@ -133,7 +133,7 @@ describe('API routes', function(){
 
       it('returns 400 error if favorite with id not found', function(done){
         chai.request(server)
-          .get('/api/v1/favorites/4')
+          .get('/api/v1/favorites/5')
           .end((err, response) => {
             response.should.have.status(400);
             response.body.should.have.property('message');
@@ -212,7 +212,7 @@ describe('API routes', function(){
 
     it('returns 400 if favorite not found', function(done){
       chai.request(server)
-        .delete('/api/v1/favorites/4')
+        .delete('/api/v1/favorites/5')
         .end((err, response) => {
           response.should.have.status(400);
           done();
