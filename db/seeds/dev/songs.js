@@ -7,7 +7,8 @@ exports.seed = function(knex, Promise) {
         knex('songs').insert([
           {name: 'song_1',artist_name: 'artist_1', genre: 'Pop',rating: 88},
           {name: 'song_2',artist_name: 'artist_2', genre: 'Rock',rating: 80},
-          {name: 'song_3',artist_name: 'artist_3', genre: 'Country',rating: 81}
+          {name: 'song_3',artist_name: 'artist_3', genre: 'Country',rating: 81},
+          {name: 'song_4',artist_name: 'artist_4', genre: 'Jazz',rating: 83}
         ],'id')
         .then((songs) => {
           console.log('seeded songs');

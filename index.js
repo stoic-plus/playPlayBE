@@ -32,7 +32,7 @@ app.get('/', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
-  database('songs').select()
+  database('songs').select().orderBy('id')
     .then((songs) => {
       response.status(200).json(songs);
     })
@@ -112,6 +112,35 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
   .catch(error => {
     response.status(400).json({ error });
   });
+});
+
+app.delete('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
+  database('playlist_songs').select('song_id').where('song_id', request.params.id)
+    .then((playsong) => {
+      if (playsong.length === 0) {
+        database('songs').select('id').where('id', request.params.id)
+          .then((song) => {
+            if (song.length === 0) {
+              response.status(400).json({ message: 'favorite not found by id' });
+            } else {
+              database('songs').where('id', request.params.id).del()
+                .then(() => {
+                  response.status(202).json({ message: 'succesfully deleted' });
+                })
+            }
+          })
+      } else {
+        database('playlist_songs').where('song_id', request.params.id).del()
+          .then(() => {
+            database('songs').where('id', request.params.id).del()
+              .then(() => {
+                response.status(202).json({ message: 'succesfully deleted' });
+              })
+          });
+      }
+    })
+    .catch(error => {
+    })
 });
 
 app.listen(app.get('port'), () => {
