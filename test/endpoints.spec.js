@@ -219,4 +219,46 @@ describe('API routes', function(){
         })
     });
   });
+
+  describe('DELETE /api/v1/playlists/:id/favorites/:favorite_id', function(){
+    beforeEach((done) => {
+      database.seed.run()
+      .then(() => done())
+      .catch(error => {throw error;});
+    });
+
+    it('removes a favorite from a playlist', function(done){
+      chai.request(server)
+        .delete('/api/v1/playlists/1/favorites/1')
+        .end((err, response) => {
+          response.should.have.status(202);
+          response.body.should.have.property('message')
+          response.body.message.should.equal('"Successfully removed song_1 from playlist_1"');
+          done();
+        })
+    });
+
+
+    it('return 404 if playlist not found', function(done){
+      chai.request(server)
+        .delete('/api/v1/playlists/4/favorites/1')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.should.have.property('message')
+          response.body.message.should.equal('playlist not found by id');
+          done();
+        })
+    });
+
+    it('return 404 if favorite not found', function(done){
+      chai.request(server)
+        .delete('/api/v1/playlists/1/favorites/3')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.should.have.property('message')
+          response.body.message.should.equal('playlist does not have favorite');
+          done();
+        })
+    });
+  });
 });
