@@ -6,6 +6,7 @@ const pry = require("pryjs");
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const Song = require('./lib/models/song');
 
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
@@ -32,7 +33,7 @@ app.get('/', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
-  database('songs').select().orderBy('id')
+  Song.all()
     .then((songs) => {
       response.status(200).json(songs);
     })
@@ -42,16 +43,16 @@ app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
 });
 
 app.post('/api/v1/favorites', (request, response) => {
-  const song = request.body;
+  const songParams = request.body;
   for (let requiredParameter of ['name', 'artist_name', 'rating', 'genre']) {
-    if (!song[requiredParameter]) {
+    if (!songParams[requiredParameter]) {
       return response
         .status(422)
         .send({ error: `Expected format: { name: <String>, artist_name: <String>, genre: <Sting>, rating: <Integer>}. You're missing a "${requiredParameter}" property.` });
     }
   }
 
-  database('songs').insert(song, ['id', 'name', 'artist_name', 'genre', 'rating'])
+  Song.create(songParams)
     .then(song => {
       response.status(201).json({favorites: song[0]})
     })
@@ -62,8 +63,7 @@ app.post('/api/v1/favorites', (request, response) => {
 
 
 app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  database('songs').where('id', request.params.id)
-    .update(request.body, ['id', 'name', 'artist_name', 'genre', 'rating'])
+  Song.update(request.params.id, request.body)
     .then((updatedSong) => {
       if (updatedSong.length === 0) {
         response.status(400).json({message: "favorite not found"});
