@@ -219,4 +219,16 @@ describe('API routes', function(){
         })
     });
   });
+
+  describe('POST /api/v1/playlists/:playlist_id/favorites/:id', function(){
+    it('can add new song to playlist', function(done){
+      chai.request(server)
+      .post('/api/v1/playlists/2/favorites/3')
+      .end((err,response) => {
+        response.should.have.status(201);
+        response.body.message.should.equal(`Successfully added song_3 to playlist_2`);
+        done();
+      })
+    })
+  })
 });

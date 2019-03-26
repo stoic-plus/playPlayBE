@@ -143,6 +143,22 @@ app.delete('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
     })
 });
 
+app.post('/api/v1/playlists/:playlist_id/favorites/:id', cors(corsOptions), (request, response) => {
+  const playlist_id = request.params.playlist_id;
+  const song_id = request.params.id;
+  database('playlist_songs').insert([
+    {playlist_id: `${playlist_id}`,
+    song_id :`${song_id}`}
+  ])
+  .then(() => {
+     return Promise.all([database('songs').where({id: `${song_id}`}).select('songs.name'),
+     database('playlists').where({id: `${playlist_id}`}).select('playlists.name')])
+  })
+    .then((obj) => {
+      response.status(201).json({ message: `Successfully added ${obj[0][0].name} to ${ obj[1][0].name}` });
+    })
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
