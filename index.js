@@ -6,9 +6,7 @@ const pry = require("pryjs");
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const Playlist = require('./lib/models/playlist');
-const PlaylistSong = require('./lib/models/playlist_song');
-const Song = require('./lib/models/song');
+const songs = require("./lib/routes/api/v1/songs");
 const SongsController = require('./lib/controllers/songs_controller');
 const PlaylistController = require('./lib/controllers/playlists_controller');
 
@@ -30,19 +28,14 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('port', process.env.PORT || 3000);
+app.use('/api/v1/favorites', songs);
 app.locals.title = 'PlayPlay';
 
 app.get('/', cors(corsOptions), (request, response) => {
   response.send('Welcome To Play Play');
 });
 
-app.get('/api/v1/favorites', cors(corsOptions), SongsController.index);
-app.post('/api/v1/favorites', SongsController.create);
-app.put('/api/v1/favorites/:id', cors(corsOptions), SongsController.update);
-app.get('/api/v1/favorites/:id', SongsController.show);
-
 app.get('/api/v1/playlists', cors(corsOptions), PlaylistController.index);
-
 app.delete('/api/v1/favorites/:id', cors(corsOptions), SongsController.deleteById);
 
 app.listen(app.get('port'), () => {
