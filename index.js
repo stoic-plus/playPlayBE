@@ -7,6 +7,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const Song = require('./lib/models/song');
+const Playlist = require('./lib/models/playlist');
 
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
@@ -77,7 +78,7 @@ app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  database('songs').where('id', request.params.id)
+  Song.findById(request.params.id)
   .then((favoritesong) => {
     if(favoritesong.length === 0) {
         response.status(400).json({message: "favorite with id not found"});
@@ -91,15 +92,7 @@ app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
 });
 
 app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
-  database('playlists')
-  .join('playlist_songs', {'playlists.id': 'playlist_songs.playlist_id'})
-  .join('songs',{'songs.id': 'playlist_songs.song_id'})
-  .select([
-    'playlists.id as id',
-    'playlists.name as name',
-    database.raw("JSON_AGG(songs) as favorites")
-  ])
-  .groupBy('playlists.id')
+  Playlist.allWithFavorites()
   .then((playlists) => {
     playlists.forEach(list => {
      list.favorites.forEach(fav => {
