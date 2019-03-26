@@ -9,6 +9,7 @@ const database = require('knex')(configuration);
 const Song = require('./lib/models/song');
 const Playlist = require('./lib/models/playlist');
 const PlaylistSong = require('./lib/models/playlist_song');
+const SongsController = require('./lib/controllers/songs_controller');
 
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
@@ -34,63 +35,10 @@ app.get('/', cors(corsOptions), (request, response) => {
   response.send('Welcome To Play Play');
 });
 
-app.get('/api/v1/favorites', cors(corsOptions), (request, response) => {
-  Song.all()
-    .then((songs) => {
-      response.status(200).json(songs);
-    })
-    .catch(error => {
-      response.status(400).json({error});
-    })
-});
-
-app.post('/api/v1/favorites', (request, response) => {
-  const songParams = request.body;
-  for (let requiredParameter of ['name', 'artist_name', 'rating', 'genre']) {
-    if (!songParams[requiredParameter]) {
-      return response
-        .status(422)
-        .send({ error: `Expected format: { name: <String>, artist_name: <String>, genre: <Sting>, rating: <Integer>}. You're missing a "${requiredParameter}" property.` });
-    }
-  }
-
-  Song.create(songParams)
-    .then(song => {
-      response.status(201).json({favorites: song[0]})
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
-  });
-
-
-app.put('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  Song.update(request.params.id, request.body)
-    .then((updatedSong) => {
-      if (updatedSong.length === 0) {
-        response.status(400).json({message: "favorite not found"});
-      } else {
-        response.status(200).json({favorites: updatedSong[0]});
-      }
-    })
-    .catch(error => {
-      response.status(400).json({error});
-    });
-});
-
-app.get('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  Song.findById(request.params.id)
-  .then((favoritesong) => {
-    if(favoritesong.length === 0) {
-        response.status(400).json({message: "favorite with id not found"});
-    } else {
-        response.status(200).json({favorites: favoritesong[0]});
-    }
-  })
-  .catch(error => {
-    response.status(400).json({message: 'favorite not found'});
-  });
-});
+app.get('/api/v1/favorites', cors(corsOptions), SongsController.index);
+app.post('/api/v1/favorites', SongsController.create);
+app.put('/api/v1/favorites/:id', cors(corsOptions), SongsController.update);
+app.get('/api/v1/favorites/:id', SongsController.show);
 
 app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
   Playlist.allWithFavorites()
