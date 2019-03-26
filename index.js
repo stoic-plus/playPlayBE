@@ -99,12 +99,12 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
     'playlists.name as name',
     database.raw("JSON_AGG(songs) as favorites")
   ])
-  .groupBy('playlists.id', 'playlist_songs.id', 'songs.id')
+  .groupBy('playlists.id')
   .then((playlists) => {
     playlists.forEach(list => {
      list.favorites.forEach(fav => {
        delete fav.created_at;
-       delete fav.updated_at;
+       delete fav.updated_
      });
    });
     response.status(200).json({playlists});
