@@ -8,6 +8,7 @@ const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const Song = require('./lib/models/song');
 const Playlist = require('./lib/models/playlist');
+const PlaylistSong = require('./lib/models/playlist_song');
 
 const whitelist = ['https://maddyg91.github.io', 'http://localhost:8080']
 const corsOptions = {
@@ -108,7 +109,7 @@ app.get('/api/v1/playlists', cors(corsOptions), (request, response) => {
 });
 
 app.delete('/api/v1/favorites/:id', cors(corsOptions), (request, response) => {
-  database('playlist_songs').select('song_id').where('song_id', request.params.id)
+  PlaylistSong.findBySongId(request.params.id)
     .then((playsong) => {
       if (playsong.length === 0) {
         database('songs').select('id').where('id', request.params.id)
