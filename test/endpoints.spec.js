@@ -240,37 +240,47 @@ describe('API routes', function(){
       .catch(error => {throw error;});
     });
 
-    xit('removes a favorite from a playlist', function(done){
+    it('removes a favorite from a playlist', function(done){
       chai.request(server)
         .delete('/api/v1/playlists/1/favorites/1')
         .end((err, response) => {
-          console.log(response);
           response.should.have.status(202);
           response.body.should.have.property('message')
-          response.body.message.should.equal('"Successfully removed song_1 from playlist_1"');
+          response.body.message.should.equal('Successfully removed song_1 from playlist_1');
           done();
         })
     });
 
 
-    xit('return 404 if playlist not found', function(done){
+    it('return 404 if playlist not found', function(done){
       chai.request(server)
         .delete('/api/v1/playlists/4/favorites/1')
         .end((err, response) => {
           response.should.have.status(404);
           response.body.should.have.property('message')
-          response.body.message.should.equal('playlist not found by id');
+          response.body.message.should.equal('playlist not found');
           done();
         })
     });
 
-    xit('return 404 if favorite not found', function(done){
+    it('return 404 if favorite not found for playlist', function(done){
       chai.request(server)
         .delete('/api/v1/playlists/1/favorites/3')
         .end((err, response) => {
           response.should.have.status(404);
           response.body.should.have.property('message')
-          response.body.message.should.equal('playlist does not have favorite');
+          response.body.message.should.equal('song_3 does not belong to requested playlist');
+          done();
+        })
+    });
+
+    it('returns 404 if favorite not found', function(done){
+      chai.request(server)
+        .delete('/api/v1/playlists/1/favorites/7')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.should.have.property('message')
+          response.body.message.should.equal('favorite not found');
           done();
         })
     });
