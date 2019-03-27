@@ -2,11 +2,6 @@ const express = require("express");
 const cors = require("./lib/routes/api/corsConfig").cors;
 const corsOptions = require("./lib/routes/api/corsConfig").corsOptions;
 const bodyParser = require("body-parser");
-
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
-
 const songs = require("./lib/routes/api/v1/songs");
 const playlists = require("./lib/routes/api/v1/playlists");
 
