@@ -2,24 +2,17 @@
 
 __Overview__
 
-__playPlay__ is an CRUD app that allows that utilizes the MusicMatch API.
-It allows full CRUD functionality for favorites (saved songs), it also allows you to add favorited songs to playlists and display those playlists.
+__playPlay__ is an CRUD app that utilizes the [MusixMatch](https://developer.musixmatch.com/) API.
+It allows full CRUD functionality for favorites (saved songs), it also allows you to add and remove favorited songs to playlists and display those playlists.
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
 - [Endpoints](#endpoints)
-  * [City Forecast](#city-forecast)
-  * [Account Creation](#account-creation)
-  * [Session Creation](#session-creation)
-  * [Favorites Creation](#favorites-creation)
-  * [Favorites Deletion](#favorites-deletion)
-  * [Favorites Listing](#favorites-listing)
-  * [Background Image](#background-image)
-  * [Giphs!](#giphs!)
+- [Schema](#schema)
 - [Built With](#built-with)
-- [Built By](#built-by)
-
+- [Contributing](#contributing)
+- [Authors](#Authors)
 
 ## Getting Started
 
@@ -274,7 +267,7 @@ It will return a 204 status code if the favorite id deleted successfully.
 </details>
 
 
-#### Creating a Favorite for a Playlist
+#### Adding a Favorite to a Playlist
 
 `POST /api/v1/playlists/:playlist_id/favorites/:id`
 
